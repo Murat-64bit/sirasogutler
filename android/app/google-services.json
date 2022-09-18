@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "323084191676",
+    "project_id": "sirasogutler-anadolu-lisesi",
+    "storage_bucket": "sirasogutler-anadolu-lisesi.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:323084191676:android:9781c084ab76cd09584db9",
+        "android_client_info": {
+          "package_name": "com.altdor.sirasogutler"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "323084191676-1c05nprlpgllk4dt09qe8gdqss3f2316.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.altdor.sirasogutler",
+            "certificate_hash": "416147137a8e4a5437733bfea24a95f5aea20c95"
+          }
+        },
+        {
+          "client_id": "323084191676-ctk7eagcj95m6c6b8hq279fus5no0cas.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB0sIYDmHRALlyB1g846Zs-JUlLFBhzRv4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "323084191676-ctk7eagcj95m6c6b8hq279fus5no0cas.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
