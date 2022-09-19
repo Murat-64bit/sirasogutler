@@ -3,6 +3,7 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:sirasogutler/pages/blog_page.dart';
 import 'package:sirasogutler/pages/home_page.dart';
 import 'package:sirasogutler/pages/settings_page.dart';
+import 'package:sirasogutler/pages/todo_app.dart';
 
 void main() => runApp(MaterialApp(
     builder: (context, child) {
@@ -26,10 +27,7 @@ class _MobileLayoutState extends State<MobileLayout> {
   List<Widget> _widgetOptions = <Widget>[
     HomePage(),
     BlogPage(),
-    Text(
-      'Ödevlerim',
-      style: optionStyle,
-    ),
+    Todo(),
     SettingsPage(),
   ];
 

@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sirasogutler/widgets/blog_card_item.dart';
 
+import '../constants/color_constants.dart';
+
 class BlogPage extends StatefulWidget {
   @override
   State<BlogPage> createState() => _BlogPageState();
@@ -16,7 +18,7 @@ class _BlogPageState extends State<BlogPage> {
         appBar: AppBar(
           title: Text('Duyurular'),
           centerTitle: true,
-          backgroundColor: Color.fromARGB(255, 27, 139, 31),
+          backgroundColor: ColorConstants.themeColor,
         ),
         body: FutureBuilder(
             future: FirebaseFirestore.instance

@@ -272,7 +272,6 @@ class HomePageState extends State<HomePage> {
           style: TextStyle(color: ColorConstants.primaryColor),
         ),
         centerTitle: true,
-        actions: <Widget>[buildPopupMenu()],
       ),
       body: SafeArea(
         child: WillPopScope(

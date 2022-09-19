@@ -9,6 +9,7 @@ import 'package:sirasogutler/constants/app_constants.dart';
 import 'package:sirasogutler/constants/color_constants.dart';
 import 'package:sirasogutler/constants/constants.dart';
 import 'package:sirasogutler/models/models.dart';
+import 'package:sirasogutler/pages/login_page.dart';
 import 'package:sirasogutler/providers/providers.dart';
 import 'package:sirasogutler/widgets/loading_view.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -44,6 +45,7 @@ class SettingsPageStateState extends State<SettingsPageState> {
   String nickname = '';
   String aboutMe = '';
   String photoUrl = '';
+  late AuthProvider authProvider;
 
   bool isLoading = false;
   File? avatarImageFile;
@@ -55,6 +57,7 @@ class SettingsPageStateState extends State<SettingsPageState> {
   @override
   void initState() {
     super.initState();
+    authProvider = context.read<AuthProvider>();
     settingProvider = context.read<SettingProvider>();
     readLocal();
   }
@@ -71,9 +74,19 @@ class SettingsPageStateState extends State<SettingsPageState> {
     controllerAboutMe = TextEditingController(text: aboutMe);
   }
 
+  Future<void> handleSignOut() async {
+    authProvider.handleSignOut();
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (context) => LoginPage()),
+      (Route<dynamic> route) => false,
+    );
+  }
+
   Future getImage() async {
     ImagePicker imagePicker = ImagePicker();
-    PickedFile? pickedFile = await imagePicker.getImage(source: ImageSource.gallery).catchError((err) {
+    PickedFile? pickedFile = await imagePicker
+        .getImage(source: ImageSource.gallery)
+        .catchError((err) {
       Fluttertoast.showToast(msg: err.toString());
     });
     File? image;
@@ -91,7 +104,8 @@ class SettingsPageStateState extends State<SettingsPageState> {
 
   Future uploadFile() async {
     String fileName = id;
-    UploadTask uploadTask = settingProvider.uploadFile(avatarImageFile!, fileName);
+    UploadTask uploadTask =
+        settingProvider.uploadFile(avatarImageFile!, fileName);
     try {
       TaskSnapshot snapshot = await uploadTask;
       photoUrl = await snapshot.ref.getDownloadURL();
@@ -102,7 +116,8 @@ class SettingsPageStateState extends State<SettingsPageState> {
         aboutMe: aboutMe,
       );
       settingProvider
-          .updateDataFirestore(FirestoreConstants.pathUserCollection, id, updateInfo.toJson())
+          .updateDataFirestore(
+              FirestoreConstants.pathUserCollection, id, updateInfo.toJson())
           .then((data) async {
         await settingProvider.setPref(FirestoreConstants.photoUrl, photoUrl);
         setState(() {
@@ -137,7 +152,8 @@ class SettingsPageStateState extends State<SettingsPageState> {
       aboutMe: aboutMe,
     );
     settingProvider
-        .updateDataFirestore(FirestoreConstants.pathUserCollection, id, updateInfo.toJson())
+        .updateDataFirestore(
+            FirestoreConstants.pathUserCollection, id, updateInfo.toJson())
         .then((data) async {
       await settingProvider.setPref(FirestoreConstants.nickname, nickname);
       await settingProvider.setPref(FirestoreConstants.aboutMe, aboutMe);
@@ -186,7 +202,9 @@ class SettingsPageStateState extends State<SettingsPageState> {
                                     color: ColorConstants.greyColor,
                                   );
                                 },
-                                loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                                loadingBuilder: (BuildContext context,
+                                    Widget child,
+                                    ImageChunkEvent? loadingProgress) {
                                   if (loadingProgress == null) return child;
                                   return Container(
                                     width: 90,
@@ -194,9 +212,13 @@ class SettingsPageStateState extends State<SettingsPageState> {
                                     child: Center(
                                       child: CircularProgressIndicator(
                                         color: ColorConstants.themeColor,
-                                        value: loadingProgress.expectedTotalBytes != null
-                                            ? loadingProgress.cumulativeBytesLoaded /
-                                                loadingProgress.expectedTotalBytes!
+                                        value: loadingProgress
+                                                    .expectedTotalBytes !=
+                                                null
+                                            ? loadingProgress
+                                                    .cumulativeBytesLoaded /
+                                                loadingProgress
+                                                    .expectedTotalBytes!
                                             : null,
                                       ),
                                     ),
@@ -229,13 +251,16 @@ class SettingsPageStateState extends State<SettingsPageState> {
                     child: Text(
                       'Nickname',
                       style: TextStyle(
-                          fontStyle: FontStyle.italic, fontWeight: FontWeight.bold, color: ColorConstants.primaryColor),
+                          fontStyle: FontStyle.italic,
+                          fontWeight: FontWeight.bold,
+                          color: ColorConstants.primaryColor),
                     ),
                     margin: EdgeInsets.only(left: 10, bottom: 5, top: 10),
                   ),
                   Container(
                     child: Theme(
-                      data: Theme.of(context).copyWith(primaryColor: ColorConstants.primaryColor),
+                      data: Theme.of(context)
+                          .copyWith(primaryColor: ColorConstants.primaryColor),
                       child: TextField(
                         decoration: InputDecoration(
                           hintText: 'Sweetie',
@@ -257,13 +282,16 @@ class SettingsPageStateState extends State<SettingsPageState> {
                     child: Text(
                       'About me',
                       style: TextStyle(
-                          fontStyle: FontStyle.italic, fontWeight: FontWeight.bold, color: ColorConstants.primaryColor),
+                          fontStyle: FontStyle.italic,
+                          fontWeight: FontWeight.bold,
+                          color: ColorConstants.primaryColor),
                     ),
                     margin: EdgeInsets.only(left: 10, top: 30, bottom: 5),
                   ),
                   Container(
                     child: Theme(
-                      data: Theme.of(context).copyWith(primaryColor: ColorConstants.primaryColor),
+                      data: Theme.of(context)
+                          .copyWith(primaryColor: ColorConstants.primaryColor),
                       child: TextField(
                         decoration: InputDecoration(
                           hintText: 'Fun, like travel and play PES...',
@@ -284,21 +312,46 @@ class SettingsPageStateState extends State<SettingsPageState> {
               ),
 
               // Button
-              Container(
-                child: TextButton(
-                  onPressed: handleUpdateData,
-                  child: Text(
-                    'Update',
-                    style: TextStyle(fontSize: 16, color: Colors.white),
-                  ),
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(ColorConstants.primaryColor),
-                    padding: MaterialStateProperty.all<EdgeInsets>(
-                      EdgeInsets.fromLTRB(30, 10, 30, 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    child: TextButton(
+                      onPressed: handleUpdateData,
+                      child: Text(
+                        'Update',
+                        style: TextStyle(fontSize: 16, color: Colors.white),
+                      ),
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            ColorConstants.primaryColor),
+                        padding: MaterialStateProperty.all<EdgeInsets>(
+                          EdgeInsets.fromLTRB(30, 10, 30, 10),
+                        ),
+                      ),
                     ),
+                    margin: EdgeInsets.only(top: 50, bottom: 50),
                   ),
-                ),
-                margin: EdgeInsets.only(top: 50, bottom: 50),
+                  SizedBox(width: 10,),
+                  Container(
+                    child: TextButton(
+                      onPressed: handleSignOut,
+                      child: Text(
+                        'Exit',
+                        style: TextStyle(fontSize: 16, color: Colors.white),
+                      ),
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            Colors.red.shade600),
+                        padding: MaterialStateProperty.all<EdgeInsets>(
+                          EdgeInsets.fromLTRB(30, 10, 30, 10),
+                        ),
+                      ),
+                    ),
+                    margin: EdgeInsets.only(top: 50, bottom: 50),
+                  ),
+                ],
               ),
             ],
           ),
